@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">Popular Movies Stage2</string>
+
+    <string name="key_intent_current_movie">currentMovie</string>
+
+    <!-- Details activity strings *************************************************** -->
+    <string name="details_toolbar_title">Movie Info</string>
+    <string name="details_image_size">w780</string>
+    <string name="key_details_snackbar_dismissed">snackbarDismissed</string>
+    <string name="snackbar_message">It seems you are not connected. To load videos and reviews reconnect and then simply rotate the device.</string>
+    <string name="snackbar_button_label">GOT IT!</string>
+    <string name="key_details_is_favorite">isFavorite</string>
+    <string name="removed_from_favorites">Removed from Favorites</string>
+    <string name="added_to_favorites">Added to Favorites</string>
+
+    <!-- Labels strings -->
+    <string name="label_overview">Overview:</string>
+    <string name="label_release_date">Release date:</string>
+    <string name="label_genres">Genres:</string>
+    <string name="label_reviews">Member Reviews:</string>
+    <string name="label_author">Author:</string>
+
+    <string name="category_popular">Popular</string>
+    <string name="category_favorites">Favorites</string>
+    <string name="category_top_rated">Top Rated</string>
+
+    <!-- Content Description Strings -->
+    <string name="content_desc_movie_poster">Movie Poster</string>
+    <string name="content_desc_backdrop_image">Movie Backdrop Image</string>
+    <string name="content_desc_no_internet_icon">No internet icon</string>
+    <string name="content_desc_trailer_preview">trailer preview image</string>
+    <string name="content_desc_trailer_play_button">trailer play button</string>
+    <string name="content_desc_no_favorites_icon">no favorites icon</string>
+
+    <!-- Miscellaneous Strings -->
+    <string name="search_option_popular">popular</string>
+    <string name="search_option_top_rated">top_rated</string>
+    <string name="sesearch_option_favorites">favorites</string>
+
+    <string name="key_nav_option_selected">navOptionSelected</string>
+    <string name="key_search_option_string">searchOptionString</string>
+    <string name="key_action_bar_title">actionBarTitle</string>
+    <string name="key_recycler_scroll_state">recyclerScrollState</string>
+
+    <!-- Error and warnings Strings -->
+    <string name="no_internet_title_text">Oops! No internet connection!</string>
+    <string name="no_internet_subheader_text">Check your internet settings and try again.</string>
+    <string name="try_again_label">Try Again</string>
+    <string name="details_intent_error">No Intent available to handle action</string>
+    <string name="trailer_error_message">No connection. Please reconnect to watch the video</string>
+    <string name="package_manager_error">No app installed to handle the request</string>
+    <string name="loader_error">Loader Not Implemented:</string>
+    <string name="no_favorites">No favorites yet!</string>
+    <string name="no_favorites_message">Click on Popular or Top Rated to add movies to your Favorites.</string>
+
+    <!-- Temporary content strings -->
+    <string name="temp_movie_title">The Maze Runner</string>
+    <string name="temp_detail_overview_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sodales dictum placerat. Ut volutpat purus sem, ac placerat neque aliquet eu. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl lacus, faucibus et laoreet sed, viverra ut tellus. Sed tortor elit, posuere vitae sapien eget, mattis commodo lectus.</string>
+    <string name="temp_date">24/04/1978</string>
+    <string name="temp_genres_content">Romance, Dramma, Science</string>
+    <string name="temp_author_name">Solitarian</string>
+    <string name="temp_review_string">Curabitur molestie ipsum molestie massa aliquam rutrum. Morbi vitae magna nibh. Integer facilisis fermentum neque nec tincidunt. Praesent sed felis sollicitudin, auctor mi sit amet, convallis dolor.</string>
+    <string name="trailer_name">Official Trailer</string>
+
+
+</resources>

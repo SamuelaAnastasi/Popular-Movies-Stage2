@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_review_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="3dp"
+    android:background="@color/colorPrimary"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackgroundBorderless"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/review_padding_vertical">
+
+    <TextView
+        android:id="@+id/tv_reviews_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primaryTextColor"
+        android:paddingBottom="@dimen/reviews_label_padding_bottom"
+        android:paddingEnd="@dimen/content_padding_horizontal"
+        android:paddingLeft="@dimen/content_padding_horizontal"
+        android:paddingRight="@dimen/content_padding_horizontal"
+        android:paddingStart="@dimen/content_padding_horizontal"
+        android:paddingTop="24dp"
+        android:text="@string/label_reviews"
+        android:textColor="@color/secondaryTextColor"
+        android:textSize="@dimen/headers_text_size"
+        android:textStyle="bold"
+        android:visibility="visible"
+        app:fontFamily="@font/poiret_one" />
+
+    <LinearLayout
+        android:id="@+id/ll_author_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="4dp"
+        android:paddingEnd="@dimen/content_padding_horizontal"
+        android:paddingLeft="@dimen/content_padding_horizontal"
+        android:paddingRight="@dimen/content_padding_horizontal"
+        android:paddingStart="@dimen/content_padding_horizontal"
+        android:paddingTop="32dp">
+
+        <TextView
+            android:id="@+id/tv_author_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_author"
+            android:textColor="@color/colorAccentLight"
+            android:textSize="@dimen/review_title_size" />
+
+        <TextView
+            android:id="@+id/tv_author_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/author_name_margin_horizontal"
+            android:layout_marginStart="@dimen/author_name_margin_horizontal"
+            android:text="@string/temp_author_name"
+            android:textColor="@color/colorAccentLight"
+            android:textSize="@dimen/review_title_size" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_review_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:lineSpacingMultiplier="1.1"
+        android:maxLines="3"
+        android:minLines="3"
+        android:paddingBottom="@dimen/review_padding_bottom"
+        android:paddingEnd="@dimen/content_padding_horizontal"
+        android:paddingLeft="@dimen/content_padding_horizontal"
+        android:paddingRight="@dimen/content_padding_horizontal"
+        android:paddingStart="@dimen/content_padding_horizontal"
+        android:paddingTop="@dimen/author_name_margin_horizontal"
+        android:text="@string/temp_review_string"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="@dimen/review_text_size" />
+
+</LinearLayout>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="no_internet_image_width">320dp</dimen>
+    <dimen name="no_internet_padding">100dp</dimen>
+    <dimen name="content_padding_horizontal">52dp</dimen>
+    <dimen name="trailer_card_width">480dp</dimen>
+    <dimen name="trailer_card_height">400dp</dimen>
+    <dimen name="trailer_image_width">480dp</dimen>
+    <dimen name="trailer_image_height">360dp</dimen>
+    <dimen name="overview_padding_vertical">64dp</dimen>
+</resources>
