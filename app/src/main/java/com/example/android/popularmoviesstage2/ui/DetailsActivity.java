@@ -4,7 +4,7 @@ package com.example.android.popularmoviesstage2.ui;
  * This project is part of Android Developer Nanodegree Scholarship Program by
  * Udacity and Google
  *
- * The project is licenced under the MIT Licence(https://opensource.org/licenses/MIT)
+ * The project is licensed under the MIT License(https://opensource.org/licenses/MIT)
  *
  * Copyright (c) 2018 - Samuela Anastasi
  */
@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -26,10 +27,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -48,7 +47,6 @@ import com.example.android.popularmoviesstage2.tasks.TrailersAsyncTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindColor;
@@ -61,9 +59,9 @@ import com.example.android.popularmoviesstage2.data.MoviesContract.MoviesEntry;
 
 import static com.example.android.popularmoviesstage2.networking.NetworkUtils.isConnected;
 
-public class DetailsActivity extends AppCompatActivity
-        implements TrailerAdapter.TrailerOnClickHandler,
-        TrailersAsyncResultHandler, ReviewsAsyncResultHandler {
+public class DetailsActivity extends AppCompatActivity implements
+        TrailerAdapter.TrailerOnClickHandler, TrailersAsyncResultHandler,
+        ReviewAdapter.ReviewOnClickHandler, ReviewsAsyncResultHandler {
 
     private static final String LOG_TAG = DetailsActivity.class.getSimpleName();
 
@@ -101,8 +99,11 @@ public class DetailsActivity extends AppCompatActivity
     @BindView(R.id.container_trailers)
     RelativeLayout trailersContainer;
 
-    @BindView(R.id.review_list)
-    LinearLayout reviewListContainer;
+    @BindView(R.id.review_container)
+    RelativeLayout reviewsContainer;
+
+    @BindView(R.id.rv_reviews)
+    RecyclerView reviewsRecycler;
 
     // Bind resources
     @BindColor(R.color.fab_state_selector_normal)
@@ -150,6 +151,9 @@ public class DetailsActivity extends AppCompatActivity
     @BindString(R.string.added_to_favorites)
     String addedToFavorites;
 
+    @BindString(R.string.key_recycler_scroll_state)
+    String recyclerScrollState;
+
     @BindString(R.string.trailer_error_message)
     String trailerErrorMessage;
 
@@ -158,6 +162,10 @@ public class DetailsActivity extends AppCompatActivity
 
     @BindString(R.string.package_manager_error)
     String packageManagerError;
+
+
+    @BindString(R.string.review_error_message)
+    String reviewErrorMessage;
 
     boolean isFavorite;
     boolean snackBarIsDismissed;
@@ -170,10 +178,10 @@ public class DetailsActivity extends AppCompatActivity
     LinearLayoutManager trailersManager;
     TrailerAdapter trailerAdapter;
     List<Trailer> trailers = new ArrayList<>();
-    List<Review> reviewsList = new ArrayList<>();
-
-    // boolean array used to track whether each inflated review view is clicked or not
-    private boolean[] reviewTextClicked = new boolean[0];
+    List<Review> reviews = new ArrayList<>();
+    LinearLayoutManager reviewsManager;
+    ReviewAdapter reviewAdapter;
+    private Parcelable reviewsScrollState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,6 +205,7 @@ public class DetailsActivity extends AppCompatActivity
             if (savedInstanceState.containsKey(keySnackBarDismissed)) {
                 snackBarIsDismissed = savedInstanceState.getBoolean(keySnackBarDismissed);
             }
+
         } else {
             snackBarIsDismissed = false;
             // if instance state == null query db to check if movie is favorite
@@ -226,7 +235,7 @@ public class DetailsActivity extends AppCompatActivity
                 showSnackBar();
             }
             trailersContainer.setVisibility(View.GONE);
-            reviewListContainer.setVisibility(View.GONE);
+            trailersContainer.setVisibility(View.GONE);
         } else {
             requestTrailers();
             requestReviews();
@@ -238,8 +247,17 @@ public class DetailsActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putBoolean(keyIsFavorite, isFavorite);
         outState.putBoolean(keySnackBarDismissed, snackBarIsDismissed);
+        reviewsScrollState = reviewsRecycler.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(recyclerScrollState, reviewsScrollState);
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if(savedInstanceState != null) {
+            reviewsRecycler.getLayoutManager().onRestoreInstanceState(reviewsScrollState);
+        }
+    }
     @Override
     public void onTrailerClick(Trailer trailer) {
         String trailerYouTubeUrl = NetworkUtils
@@ -261,20 +279,12 @@ public class DetailsActivity extends AppCompatActivity
 
     @Override
     public void onReviewsAsyncResult(List<Review> reviews) {
-        if (reviews.size() > 0) {
-            reviewsList = reviews;
-            int size = reviews.size();
-
-            for (int position = 0; position < size; position++) {
-                Review review = reviewsList.get(position);
-
-                View view = inflateReviewItem(review, size, position);
-                if (position > 0) {
-                    TextView labelView = view.findViewById(R.id.tv_reviews_label);
-                    labelView.setVisibility(View.GONE);
-                }
-                reviewListContainer.addView(view);
-            }
+        if (reviews != null && reviews.size() > 0) {
+            reviewsContainer.setVisibility(View.VISIBLE);
+            ReviewAdapter adapter = (ReviewAdapter) reviewsRecycler.getAdapter();
+            adapter.setReviews(reviews);
+        } else {
+            reviewsContainer.setVisibility(View.GONE);
         }
     }
 
@@ -323,45 +333,17 @@ public class DetailsActivity extends AppCompatActivity
     // Called inside onCreate() - Creates and executes the AsyncTask to fetch reviews data
     // from REST API - results will be handled by DetailsActivity (reviewsResultHandler)
     private void requestReviews() {
+        reviewsManager = new LinearLayoutManager(this,
+                LinearLayoutManager.VERTICAL, false);
+        reviewsRecycler.setLayoutManager(reviewsManager);
+        reviewsRecycler.setHasFixedSize(true);
+        reviewAdapter = new ReviewAdapter(this);
+        reviewAdapter.setReviews(reviews);
+        reviewsRecycler.setAdapter(reviewAdapter);
         String movieIdString = String.valueOf(movieId);
         ReviewsAsyncTask reviewsAsyncTask = new ReviewsAsyncTask(
                 DetailsActivity.this);
         reviewsAsyncTask.execute(movieIdString);
-    }
-
-    // Inflate review layout, set data to child views and clickListener
-    // Called by onReviewsAsyncResult()
-    private View inflateReviewItem (Review review, int size, final int position) {
-
-        // reallocate boolean array to fit reviews list size
-        // and populate each element with false value
-        reviewTextClicked = Arrays.copyOf(reviewTextClicked, size);
-        for (int i = 0; i < size; i++) {
-            reviewTextClicked[i] = false;
-        }
-
-        LayoutInflater inflater = LayoutInflater.from(DetailsActivity.this);
-        View view = inflater.inflate(R.layout.details_reviews_layout, reviewListContainer, false);
-
-        TextView authorTextView = view.findViewById(R.id.tv_author_name);
-        final TextView contentTextView = view.findViewById(R.id.tv_review_content);
-
-        authorTextView.setText(review.getReviewAuthor());
-        contentTextView.setText(review.getReviewContent());
-
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(reviewTextClicked[position]){
-                    contentTextView.setMaxLines(3);
-                    reviewTextClicked[position] = false;
-                } else {
-                    contentTextView.setMaxLines(Integer.MAX_VALUE);
-                    reviewTextClicked[position] = true;
-                }
-            }
-        });
-        return view;
     }
 
     @OnClick(R.id.fab)
@@ -468,6 +450,25 @@ public class DetailsActivity extends AppCompatActivity
         textView.setMinLines(3);
         textView.setMaxLines(3);
         snackbar.show();
+    }
+
+    @Override
+    public void onReviewClick(Review review) {
+        String reviewUrl = review.getReviewUrl();
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(reviewUrl));
+        PackageManager pm = getPackageManager();
+        if (isConnected(this)) {
+            if(intent.resolveActivity(pm) != null) {
+                this.startActivity(intent);
+            } else {
+                showToast(packageManagerError);
+                Log.e(LOG_TAG, detailsIntentError);
+            }
+        } else {
+            showToast(reviewErrorMessage);
+        }
+
     }
 }
 

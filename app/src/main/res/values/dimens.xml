@@ -33,7 +33,7 @@
     <dimen name="overview_content_padding_bottom">32dp</dimen>
     <dimen name="overview_label_padding_bottom">8dp</dimen>
     <dimen name="label_padding_right">16dp</dimen>
-
+    <dimen name="fab_margin_right">16dp</dimen>
     <dimen name="movie_title_text_size">32sp</dimen>
     <dimen name="headers_text_size">22sp</dimen>
     <dimen name="content_text_size">16sp</dimen>

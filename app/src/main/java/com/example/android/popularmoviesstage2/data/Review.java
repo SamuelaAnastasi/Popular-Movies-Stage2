@@ -4,7 +4,7 @@ package com.example.android.popularmoviesstage2.data;
  * This project is part of Android Developer Nanodegree Scholarship Program by
  * Udacity and Google
  *
- * The project is licenced under the MIT Licence(https://opensource.org/licenses/MIT)
+ * The project is licensed under the MIT License(https://opensource.org/licenses/MIT)
  *
  * Copyright (c) 2018 - Samuela Anastasi
  */
@@ -15,6 +15,7 @@ public class Review {
     private String reviewId;
     private String reviewAuthor;
     private String reviewContent;
+    private String reviewUrl;
 
     // Default constructor
     public Review() {}
@@ -32,6 +33,10 @@ public class Review {
         return reviewContent;
     }
 
+    public String getReviewUrl() {
+        return reviewUrl;
+    }
+
     // Setter methods -----------------------------------------------------------------------
     public void setReviewId(String reviewId) {
         this.reviewId = reviewId;
@@ -43,5 +48,9 @@ public class Review {
 
     public void setReviewContent(String reviewContent) {
         this.reviewContent = reviewContent;
+    }
+
+    public void setReviewUrl(String reviewUrl) {
+        this.reviewUrl = reviewUrl;
     }
 }

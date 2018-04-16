@@ -1,36 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/no_internet_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_centerInParent="true"
+    android:layout_gravity="center"
     android:background="@color/colorAccent"
-    android:paddingBottom="@dimen/no_internet_padding_vertical"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal"
     android:paddingLeft="@dimen/no_internet_padding_horizontal"
     android:paddingRight="@dimen/no_internet_padding_horizontal"
-    android:paddingTop="@dimen/no_internet_padding_vertical">
+    android:paddingTop="@dimen/no_favorites_padding_vertical">
 
     <ImageView
         android:id="@+id/error_img"
         android:layout_width="@dimen/no_internet_img_dimens_land"
         android:layout_height="@dimen/no_internet_img_dimens_land"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_gravity="center_horizontal"
         android:adjustViewBounds="true"
         android:contentDescription="@string/content_desc_no_internet_icon"
         app:srcCompat="@drawable/no_internet_svg_img" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="@dimen/no_internet_text_margin_top"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="48dp"
+        android:layout_weight="1"
         android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingTop="24dp">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/no_internet_header"
@@ -39,7 +38,6 @@
             android:layout_marginBottom="8dp"
             android:layout_marginTop="@dimen/no_internet_text_margin_top"
             android:gravity="center_horizontal"
-
             android:text="@string/no_internet_title_text"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/primaryTextColor"
@@ -51,6 +49,7 @@
             android:id="@+id/check_settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
             android:text="@string/no_internet_subheader_text"
             android:textAppearance="?android:attr/textAppearanceSmall"
@@ -71,4 +70,4 @@
             android:textSize="16sp" />
 
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

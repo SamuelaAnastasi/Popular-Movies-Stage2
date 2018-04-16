@@ -16,7 +16,7 @@ import java.util.List;
  * This project is part of Android Developer Nanodegree Scholarship Program by
  * Udacity and Google
  *
- * The project is licenced under the MIT Licence(https://opensource.org/licenses/MIT)
+ * The project is licensed under the MIT License(https://opensource.org/licenses/MIT)
  *
  * Copyright (c) 2018 - Samuela Anastasi
  */
@@ -36,6 +36,7 @@ public class ReviewsJsonUtils {
     private static final String KEY_REVIEW_ID = "id";
     private static final String KEY_REVIEW_AUTHOR = "author";
     private static final String KEY_REVIEW_CONTENT = "content";
+    private static final String KEY_REVIEW_URL = "url";
 
     // Private constructor to avoid instantiation. The class contains only static methods
     private ReviewsJsonUtils() {
@@ -65,12 +66,14 @@ public class ReviewsJsonUtils {
                     String reviewId = currentReview.optString(KEY_REVIEW_ID);
                     String reviewAuthor = currentReview.optString(KEY_REVIEW_AUTHOR);
                     String reviewContent = currentReview.optString(KEY_REVIEW_CONTENT);
+                    String reviewUrl = currentReview.optString(KEY_REVIEW_URL);
 
                     Review review = new Review();
 
                     review.setReviewId(reviewId);
                     review.setReviewAuthor(reviewAuthor);
                     review.setReviewContent(reviewContent);
+                    review.setReviewUrl(reviewUrl);
 
                     reviews.add(review);
                 }

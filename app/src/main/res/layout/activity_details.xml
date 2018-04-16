@@ -51,8 +51,13 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nsv_movie_container"
+
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:fillViewport="true"
         android:paddingBottom="16dp"
@@ -61,7 +66,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:orientation="vertical">
 
@@ -88,25 +93,22 @@
                     android:layoutAnimation="@anim/linear_layout_animation_from_right"
                     android:scrollbarThumbHorizontal="@color/trailer_scrollbar_color"
                     android:scrollbars="horizontal"
-                    android:visibility="visible"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                    android:visibility="visible" />
 
             </RelativeLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/review_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/review_container_background"
-                android:orientation="vertical">
+                android:background="@color/review_container_background">
 
-                <LinearLayout
-                    android:id="@+id/review_list"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_reviews"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
+                    android:layout_height="wrap_content" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
         </LinearLayout>
 
@@ -118,8 +120,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="@dimen/layout_padding_horizontal"
-        android:layout_marginRight="@dimen/layout_padding_horizontal"
+        android:layout_marginEnd="@dimen/fab_margin_right"
+        android:layout_marginRight="@dimen/fab_margin_right"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:focusable="true"

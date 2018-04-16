@@ -30,7 +30,7 @@ The project uses the following libraries:
 * [Butter Knife](http://jakewharton.github.io/butterknife/)
 * [Picasso](http://square.github.io/picasso/)
 
-### Project Licence
-This project is licenced under the [MIT Licence](https://opensource.org/licenses/MIT)
+### Project License
+This project is licensed under the [MIT Licence](https://opensource.org/licenses/MIT)
 
-Copyright (c) 2018 - Samuela Anastasi
+Copyright &copy; 2018 - Samuela Anastasi

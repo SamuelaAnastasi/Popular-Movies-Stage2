@@ -48,6 +48,7 @@
     <string name="try_again_label">Try Again</string>
     <string name="details_intent_error">No Intent available to handle action</string>
     <string name="trailer_error_message">No connection. Please reconnect to watch the video</string>
+    <string name="review_error_message">No connection. Please reconnect to read the review</string>
     <string name="package_manager_error">No app installed to handle the request</string>
     <string name="loader_error">Loader Not Implemented:</string>
     <string name="no_favorites">No favorites yet!</string>
