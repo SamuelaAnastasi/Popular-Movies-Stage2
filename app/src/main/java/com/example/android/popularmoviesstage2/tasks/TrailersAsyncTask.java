@@ -8,7 +8,7 @@ import com.example.android.popularmoviesstage2.networking.NetworkUtils;
 import com.example.android.popularmoviesstage2.networking.TrailersJsonUtils;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * This project is part of Android Developer Nanodegree Scholarship Program by
@@ -19,7 +19,7 @@ import java.util.List;
  * Copyright (c) 2018 - Samuela Anastasi
  */
 
-public class TrailersAsyncTask extends AsyncTask<String, Void, List<Trailer>> {
+public class TrailersAsyncTask extends AsyncTask<String, Void, ArrayList<Trailer>> {
 
     private TrailersAsyncResultHandler trailersResultHandler;
 
@@ -28,7 +28,7 @@ public class TrailersAsyncTask extends AsyncTask<String, Void, List<Trailer>> {
         this.trailersResultHandler = trailersResultHandler;
     }
     @Override
-    protected List<Trailer> doInBackground(String... params) {
+    protected ArrayList<Trailer> doInBackground(String... params) {
 
         try {
             String response = NetworkUtils.getTrailersJsonString(params[0]);
@@ -40,7 +40,7 @@ public class TrailersAsyncTask extends AsyncTask<String, Void, List<Trailer>> {
     }
 
     @Override
-    protected void onPostExecute(List<Trailer> trailers) {
+    protected void onPostExecute(ArrayList<Trailer> trailers) {
         if (trailers != null) {
             trailersResultHandler.onTrailersAsyncResult(trailers);
         }

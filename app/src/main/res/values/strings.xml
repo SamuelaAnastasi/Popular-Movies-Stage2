@@ -41,6 +41,8 @@
     <string name="key_search_option_string">searchOptionString</string>
     <string name="key_action_bar_title">actionBarTitle</string>
     <string name="key_recycler_scroll_state">recyclerScrollState</string>
+    <string name="review_bundle_key">REVIEW_LIST</string>
+    <string name="nested_scroll_position">NESTED_SCROLL_POSITION</string>
 
     <!-- Error and warnings Strings -->
     <string name="no_internet_title_text">Oops! No internet connection!</string>

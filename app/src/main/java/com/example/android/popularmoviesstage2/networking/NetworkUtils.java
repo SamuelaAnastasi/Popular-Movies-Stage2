@@ -147,7 +147,6 @@ public class NetworkUtils {
         return createURL(uri.toString());
     }
 
-    // ------------------------------------------------------------------------------------------
 
     /**
      * Create URL object from plain String
@@ -168,6 +167,7 @@ public class NetworkUtils {
         return url;
     }
 
+    // Read from InputStream return Jspn String response
     private static String readInputStream(URL url) throws IOException {
         if (url == null) {
             return null;

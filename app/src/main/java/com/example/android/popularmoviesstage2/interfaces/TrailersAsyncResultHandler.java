@@ -2,7 +2,7 @@ package com.example.android.popularmoviesstage2.interfaces;
 
 import com.example.android.popularmoviesstage2.data.Trailer;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * This project is part of Android Developer Nanodegree Scholarship Program by
@@ -14,5 +14,5 @@ import java.util.List;
  */
 
 public interface TrailersAsyncResultHandler {
-    void onTrailersAsyncResult(List<Trailer> trailers);
+    void onTrailersAsyncResult(ArrayList<Trailer> trailers);
 }

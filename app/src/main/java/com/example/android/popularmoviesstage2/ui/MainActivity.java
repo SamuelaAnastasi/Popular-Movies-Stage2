@@ -25,7 +25,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.example.android.popularmoviesstage2.R;
 import com.example.android.popularmoviesstage2.data.Movie;

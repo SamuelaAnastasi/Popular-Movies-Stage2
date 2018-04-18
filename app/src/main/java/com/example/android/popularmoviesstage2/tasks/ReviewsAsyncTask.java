@@ -8,7 +8,7 @@ import com.example.android.popularmoviesstage2.networking.NetworkUtils;
 import com.example.android.popularmoviesstage2.networking.ReviewsJsonUtils;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * This project is part of Android Developer Nanodegree Scholarship Program by
@@ -19,7 +19,7 @@ import java.util.List;
  * Copyright (c) 2018 - Samuela Anastasi
  */
 
-public class ReviewsAsyncTask extends AsyncTask<String, Void, List<Review>> {
+public class ReviewsAsyncTask extends AsyncTask<String, Void, ArrayList<Review>> {
 
     private ReviewsAsyncResultHandler reviewsResultHandler;
 
@@ -30,7 +30,7 @@ public class ReviewsAsyncTask extends AsyncTask<String, Void, List<Review>> {
     }
 
     @Override
-    protected List<Review> doInBackground(String... params) {
+    protected ArrayList<Review> doInBackground(String... params) {
         try {
             String response = NetworkUtils.getReviewsJsonString(params[0]);
             return ReviewsJsonUtils.parseReviewsJsonString(response);
@@ -41,7 +41,7 @@ public class ReviewsAsyncTask extends AsyncTask<String, Void, List<Review>> {
     }
 
     @Override
-    protected void onPostExecute(List<Review> reviews) {
+    protected void onPostExecute(ArrayList<Review> reviews) {
         if (reviews != null) {
             reviewsResultHandler.onReviewsAsyncResult(reviews);
         }

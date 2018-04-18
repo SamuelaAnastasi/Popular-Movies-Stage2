@@ -20,6 +20,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -47,7 +48,6 @@ import com.example.android.popularmoviesstage2.tasks.TrailersAsyncTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindColor;
 import butterknife.BindString;
@@ -105,6 +105,9 @@ public class DetailsActivity extends AppCompatActivity implements
     @BindView(R.id.rv_reviews)
     RecyclerView reviewsRecycler;
 
+    @BindView(R.id.nsv_movie_container)
+    NestedScrollView nestedScrollView;
+
     // Bind resources
     @BindColor(R.color.fab_state_selector_normal)
     ColorStateList fabColorNormal;
@@ -154,6 +157,12 @@ public class DetailsActivity extends AppCompatActivity implements
     @BindString(R.string.key_recycler_scroll_state)
     String recyclerScrollState;
 
+    @BindString(R.string.review_bundle_key)
+    String reviewBundleKey;
+
+    @BindString(R.string.nested_scroll_position)
+    String nestedScrollPosition;
+
     @BindString(R.string.trailer_error_message)
     String trailerErrorMessage;
 
@@ -170,6 +179,7 @@ public class DetailsActivity extends AppCompatActivity implements
     boolean isFavorite;
     boolean snackBarIsDismissed;
     int movieId;
+    private Parcelable trailersScrollState;
 
     Movie currentMovie;
     String backdropUri;
@@ -177,11 +187,10 @@ public class DetailsActivity extends AppCompatActivity implements
     ActionBar actionBar;
     LinearLayoutManager trailersManager;
     TrailerAdapter trailerAdapter;
-    List<Trailer> trailers = new ArrayList<>();
-    List<Review> reviews = new ArrayList<>();
+    ArrayList<Trailer> mTrailers = new ArrayList<>();
+    ArrayList<Review> mReviews = new ArrayList<>();
     LinearLayoutManager reviewsManager;
     ReviewAdapter reviewAdapter;
-    private Parcelable reviewsScrollState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,10 +199,21 @@ public class DetailsActivity extends AppCompatActivity implements
 
         ButterKnife.bind(this);
 
+        setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        collapsingToolbar.setTitle(detailsToolbarTitle);
+
         Intent intent = getIntent();
         updateUi(intent);
 
+        setTrailersRecycler();
+        setReviewsRecycler();
+
         if (savedInstanceState != null) {
+            requestTrailers();
             // On configuration changes skip querying db to check if movie is favorite
             if (savedInstanceState.containsKey(keyIsFavorite)) {
                 isFavorite = savedInstanceState.getBoolean(keyIsFavorite);
@@ -206,6 +226,19 @@ public class DetailsActivity extends AppCompatActivity implements
                 snackBarIsDismissed = savedInstanceState.getBoolean(keySnackBarDismissed);
             }
 
+            if (savedInstanceState.containsKey(reviewBundleKey)) {
+                mReviews = savedInstanceState.getParcelableArrayList(reviewBundleKey);
+                if((mReviews != null) && mReviews.size() > 0) {
+                    reviewAdapter.setReviews(mReviews);
+                    reviewsRecycler.setAdapter(reviewAdapter);
+                    reviewsContainer.setVisibility(View.VISIBLE);
+                } else {
+                    if (isConnected(DetailsActivity.this)) {
+                        requestReviews();
+                    }
+                }
+            }
+
         } else {
             snackBarIsDismissed = false;
             // if instance state == null query db to check if movie is favorite
@@ -213,32 +246,19 @@ public class DetailsActivity extends AppCompatActivity implements
             if (isFavorite) {
                 setFabColorFavorite();
             }
+            if (!isConnected(DetailsActivity.this)) {
+                trailersContainer.setVisibility(View.GONE);
+                reviewsContainer.setVisibility(View.GONE);
+            } else {
+                requestTrailers();
+                requestReviews();
+            }
         }
 
-        setSupportActionBar(toolbar);
-        actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-        collapsingToolbar.setTitle(detailsToolbarTitle);
-
-        String imageUri = NetworkUtils.buildImageUrl(detailsImageSize, backdropUri);
-        Picasso.get()
-                .load(imageUri)
-                .placeholder(R.drawable.placeholder_shape_land)
-                .error(R.drawable.error_shape_land)
-                .into(backdropImage);
-
-        // Check for connection and also check if user has already dismissed the snackBar,
         if (!isConnected(DetailsActivity.this)) {
             if (!snackBarIsDismissed) {
                 showSnackBar();
             }
-            trailersContainer.setVisibility(View.GONE);
-            trailersContainer.setVisibility(View.GONE);
-        } else {
-            requestTrailers();
-            requestReviews();
         }
     }
 
@@ -247,17 +267,30 @@ public class DetailsActivity extends AppCompatActivity implements
         super.onSaveInstanceState(outState);
         outState.putBoolean(keyIsFavorite, isFavorite);
         outState.putBoolean(keySnackBarDismissed, snackBarIsDismissed);
-        reviewsScrollState = reviewsRecycler.getLayoutManager().onSaveInstanceState();
-        outState.putParcelable(recyclerScrollState, reviewsScrollState);
+        trailersScrollState = trailersRecycler.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(recyclerScrollState, trailersScrollState);
+        outState.putParcelableArrayList(reviewBundleKey, mReviews);
+        outState.putIntArray(nestedScrollPosition,
+                new int[]{ nestedScrollView.getScrollX(), nestedScrollView.getScrollY()});
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if(savedInstanceState != null) {
-            reviewsRecycler.getLayoutManager().onRestoreInstanceState(reviewsScrollState);
+            trailersScrollState = savedInstanceState.getParcelable(recyclerScrollState);
+            final int[] position = savedInstanceState.getIntArray(nestedScrollPosition);
+            if(position != null) {
+                nestedScrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        nestedScrollView.smoothScrollTo(position[0], position[1]);
+                    }
+                });
+            }
         }
     }
+
     @Override
     public void onTrailerClick(Trailer trailer) {
         String trailerYouTubeUrl = NetworkUtils
@@ -278,22 +311,47 @@ public class DetailsActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onReviewsAsyncResult(List<Review> reviews) {
+    public void onReviewClick(Review review) {
+        String reviewUrl = review.getReviewUrl();
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(reviewUrl));
+        PackageManager pm = getPackageManager();
+        if (isConnected(this)) {
+            if(intent.resolveActivity(pm) != null) {
+                this.startActivity(intent);
+            } else {
+                showToast(packageManagerError);
+                Log.e(LOG_TAG, detailsIntentError);
+            }
+        } else {
+            showToast(reviewErrorMessage);
+        }
+    }
+
+    @Override
+    public void onReviewsAsyncResult(ArrayList<Review> reviews) {
+        mReviews = reviews;
         if (reviews != null && reviews.size() > 0) {
             reviewsContainer.setVisibility(View.VISIBLE);
             ReviewAdapter adapter = (ReviewAdapter) reviewsRecycler.getAdapter();
             adapter.setReviews(reviews);
+            reviewsRecycler.setAdapter(adapter);
         } else {
             reviewsContainer.setVisibility(View.GONE);
         }
     }
 
     @Override
-    public void onTrailersAsyncResult(List<Trailer> trailers) {
+    public void onTrailersAsyncResult(ArrayList<Trailer> trailers) {
+        mTrailers = trailers;
         if (trailers != null && trailers.size() > 0) {
             trailersContainer.setVisibility(View.VISIBLE);
             TrailerAdapter adapter = (TrailerAdapter) trailersRecycler.getAdapter();
             adapter.setTrailers(trailers);
+            LinearLayoutManager manager = (LinearLayoutManager) trailersRecycler.getLayoutManager();
+            if (trailersScrollState != null) {
+                manager.onRestoreInstanceState(trailersScrollState);
+            }
             trailersRecycler.scheduleLayoutAnimation();
         } else {
             trailersContainer.setVisibility(View.GONE);
@@ -311,35 +369,22 @@ public class DetailsActivity extends AppCompatActivity implements
             backdropUri = currentMovie.getBackdropPath();
             float ratingValue = currentMovie.getVoteAverage();
             ratingBar.setRating(ratingValue);
+            loadBackdropImage();
         }
     }
 
     // Called inside onCreate() - instantiate the trailersManager and trailersAdapter
-    // Creates and executes the AsyncTask to fetch trailers data from REST API
+    // Creates and executes the AsyncTask to fetch mTrailers data from REST API
     private void requestTrailers() {
-        trailersManager = new LinearLayoutManager(this,
-                LinearLayoutManager.HORIZONTAL, false);
-        trailersRecycler.setLayoutManager(trailersManager);
-        trailersRecycler.setHasFixedSize(true);
-        trailerAdapter = new TrailerAdapter(this);
-        trailerAdapter.setTrailers(trailers);
-        trailersRecycler.setAdapter(trailerAdapter);
         String movieIdString = String.valueOf(movieId);
         TrailersAsyncTask trailersAsyncTask =
                 new TrailersAsyncTask(DetailsActivity.this);
         trailersAsyncTask.execute(movieIdString);
     }
 
-    // Called inside onCreate() - Creates and executes the AsyncTask to fetch reviews data
+    // Called inside onCreate() - Creates and executes the AsyncTask to fetch mReviews data
     // from REST API - results will be handled by DetailsActivity (reviewsResultHandler)
     private void requestReviews() {
-        reviewsManager = new LinearLayoutManager(this,
-                LinearLayoutManager.VERTICAL, false);
-        reviewsRecycler.setLayoutManager(reviewsManager);
-        reviewsRecycler.setHasFixedSize(true);
-        reviewAdapter = new ReviewAdapter(this);
-        reviewAdapter.setReviews(reviews);
-        reviewsRecycler.setAdapter(reviewAdapter);
         String movieIdString = String.valueOf(movieId);
         ReviewsAsyncTask reviewsAsyncTask = new ReviewsAsyncTask(
                 DetailsActivity.this);
@@ -413,7 +458,6 @@ public class DetailsActivity extends AppCompatActivity implements
     }
 
     // Handle FAB background color --------------------------------------------------------------
-
     private void setFabColorFavorite() {
         fab.setBackgroundTintList(fabColorFavorite);
     }
@@ -452,23 +496,34 @@ public class DetailsActivity extends AppCompatActivity implements
         snackbar.show();
     }
 
-    @Override
-    public void onReviewClick(Review review) {
-        String reviewUrl = review.getReviewUrl();
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(reviewUrl));
-        PackageManager pm = getPackageManager();
-        if (isConnected(this)) {
-            if(intent.resolveActivity(pm) != null) {
-                this.startActivity(intent);
-            } else {
-                showToast(packageManagerError);
-                Log.e(LOG_TAG, detailsIntentError);
-            }
-        } else {
-            showToast(reviewErrorMessage);
-        }
+    private void loadBackdropImage() {
+        String imageUri = NetworkUtils.buildImageUrl(detailsImageSize, backdropUri);
+        Picasso.get()
+                .load(imageUri)
+                .placeholder(R.drawable.placeholder_shape_land)
+                .error(R.drawable.error_shape_land)
+                .into(backdropImage);
+    }
 
+    private void setTrailersRecycler() {
+        trailersManager = new LinearLayoutManager(this,
+                LinearLayoutManager.HORIZONTAL, false);
+        trailersRecycler.setLayoutManager(trailersManager);
+        trailersRecycler.setHasFixedSize(true);
+        trailersRecycler.setNestedScrollingEnabled(false);
+        trailerAdapter = new TrailerAdapter(this);
+        trailerAdapter.setTrailers(mTrailers);
+        trailersRecycler.setAdapter(trailerAdapter);
+    }
+
+    private void setReviewsRecycler() {
+        reviewsManager = new LinearLayoutManager(this,
+                LinearLayoutManager.VERTICAL, false);
+        reviewsRecycler.setLayoutManager(reviewsManager);
+        reviewsRecycler.setHasFixedSize(true);
+        reviewsRecycler.setNestedScrollingEnabled(false);
+        reviewAdapter = new ReviewAdapter(this);
+        reviewAdapter.setReviews(mReviews);
+        reviewsRecycler.setAdapter(reviewAdapter);
     }
 }
-

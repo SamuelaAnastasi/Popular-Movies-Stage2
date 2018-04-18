@@ -15,7 +15,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by the_insider on 15/04/2018.
+ * This project is part of Android Developer Nanodegree Scholarship Program by
+ * Udacity and Google
+ *
+ * The project is licensed under the MIT License(https://opensource.org/licenses/MIT)
+ *
+ * Copyright (c) 2018 - Samuela Anastasi
  */
 
 public class ReviewAdapter  extends RecyclerView.Adapter<ReviewAdapter.ReviewHolder> {
@@ -32,7 +37,6 @@ public class ReviewAdapter  extends RecyclerView.Adapter<ReviewAdapter.ReviewHol
     ReviewAdapter(ReviewOnClickHandler reviewClickHandler) {
         this.reviewClickHandler = reviewClickHandler;
     }
-
 
     @Override
     public ReviewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -84,5 +88,9 @@ public class ReviewAdapter  extends RecyclerView.Adapter<ReviewAdapter.ReviewHol
     void setReviews(List<Review> reviews) {
         this.reviews = reviews;
         this.notifyDataSetChanged();
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
     }
 }

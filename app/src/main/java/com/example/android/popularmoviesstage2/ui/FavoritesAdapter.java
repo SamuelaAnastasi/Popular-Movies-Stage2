@@ -111,9 +111,6 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
     }
 
     public void swapCursor(Cursor newCursor) {
-        if (cursor != null) {
-            cursor.close();
-        }
         cursor = newCursor;
         if (newCursor != null) {
             notifyDataSetChanged();

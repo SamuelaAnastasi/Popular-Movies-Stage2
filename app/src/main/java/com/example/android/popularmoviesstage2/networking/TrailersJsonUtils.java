@@ -10,7 +10,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This project is part of Android Developer Nanodegree Scholarship Program by
@@ -43,11 +42,11 @@ public class TrailersJsonUtils {
     private TrailersJsonUtils() {
     }
 
-    public static List<Trailer> parseTrailersJsonString(String jsonString) {
+    public static ArrayList<Trailer> parseTrailersJsonString(String jsonString) {
         if (TextUtils.isEmpty(jsonString)) {
             return null;
         }
-        List<Trailer> trailers = new ArrayList<>();
+        ArrayList<Trailer> trailers = new ArrayList<>();
 
         try {
 

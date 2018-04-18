@@ -50,14 +50,13 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/nsv_movie_container"
+    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 
-        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/nsv_movie_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@color/colorPrimary"
         android:fillViewport="true"
         android:paddingBottom="16dp"
@@ -92,8 +91,7 @@
                     android:clipToPadding="false"
                     android:layoutAnimation="@anim/linear_layout_animation_from_right"
                     android:scrollbarThumbHorizontal="@color/trailer_scrollbar_color"
-                    android:scrollbars="horizontal"
-                    android:visibility="visible" />
+                    android:scrollbars="horizontal" />
 
             </RelativeLayout>
 
@@ -101,12 +99,31 @@
                 android:id="@+id/review_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/review_container_background">
+                android:background="@color/review_container_background"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_reviews_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/primaryTextColor"
+                    android:paddingBottom="@dimen/reviews_label_padding_bottom"
+                    android:paddingEnd="@dimen/content_padding_horizontal"
+                    android:paddingLeft="@dimen/content_padding_horizontal"
+                    android:paddingRight="@dimen/content_padding_horizontal"
+                    android:paddingStart="@dimen/content_padding_horizontal"
+                    android:paddingTop="24dp"
+                    android:text="@string/label_reviews"
+                    android:textColor="@color/secondaryTextColor"
+                    android:textSize="@dimen/headers_text_size"
+                    android:textStyle="bold"
+                    app:fontFamily="@font/poiret_one" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_reviews"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_reviews_label" />
 
             </RelativeLayout>
 

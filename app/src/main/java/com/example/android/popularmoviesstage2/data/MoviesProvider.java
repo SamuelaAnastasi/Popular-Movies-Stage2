@@ -68,7 +68,6 @@ public class MoviesProvider extends ContentProvider {
                         selectionArgs, null, null, sortOrder);
                 break;
             default:
-                database.close();
                 throw new IllegalArgumentException("Unknown Uri " + uri);
         }
 

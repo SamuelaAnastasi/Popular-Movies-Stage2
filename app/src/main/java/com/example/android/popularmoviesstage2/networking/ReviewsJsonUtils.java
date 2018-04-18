@@ -10,7 +10,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This project is part of Android Developer Nanodegree Scholarship Program by
@@ -42,11 +41,11 @@ public class ReviewsJsonUtils {
     private ReviewsJsonUtils() {
     }
 
-    public static List<Review> parseReviewsJsonString(String jsonString) {
+    public static ArrayList<Review> parseReviewsJsonString(String jsonString) {
         if (TextUtils.isEmpty(jsonString)) {
             return null;
         }
-        List<Review> reviews = new ArrayList<>();
+        ArrayList<Review> reviews = new ArrayList<>();
 
         try {
 

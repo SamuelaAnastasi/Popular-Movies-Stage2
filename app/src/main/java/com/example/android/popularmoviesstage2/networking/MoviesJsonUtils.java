@@ -70,7 +70,6 @@ public class MoviesJsonUtils {
     private static final String GENRE_WESTERN = "Western";
     private static final String GENRE_DEFAULT = "";
 
-
     // Private constructor to avoid instantiation. The class contains only static methods
     private MoviesJsonUtils() {}
 
